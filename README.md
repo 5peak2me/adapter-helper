@@ -51,7 +51,7 @@ mRecylerView.setAdapter(new BaseRVAdapter<Item>(this, mDatas, R.layout.list_item
 });
 ```
 
-and from now on, it support multiple types of layout.U can easily find it in code like this.U must override getItemViewType method to tell adapter whitch u want show and mLayoutIds is a array of layout ids.
+and from now on, it support multiple types of layout.U can easily find it in code like this.U must override `getItemViewType` method to tell adapter whitch u want show and `mLayoutIds` is a array of layout ids.
 ```
 mListView.setAdapter(new BaseLVAdapter<Item>(this, mDatas, mLayoutIds) {
     @Override
