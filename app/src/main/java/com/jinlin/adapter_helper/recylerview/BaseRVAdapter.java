@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by J!nl!n on 15/10/19.
  * Copyright © 1990-2015 J!nl!n™ Inc. All rights reserved.
- * <p/>
+ * <p>
  * ━━━━━━神兽出没━━━━━━
  * 　　　┏┓　　　┏┓
  * 　　┏┛┻━━━┛┻┓
@@ -37,21 +37,33 @@ import java.util.List;
 public abstract class BaseRVAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
     protected final Context mContext;
     protected final List<T> mDatas;
-    protected final int mItemLayoutId;
+    protected final int[] mItemLayoutId;
 
-    public BaseRVAdapter(Context context, int itemLayoutId) {
+    public BaseRVAdapter(Context context, int... itemLayoutId) {
         this(context, null, itemLayoutId);
     }
 
-    public BaseRVAdapter(Context context, List<T> datas, int layoutResId) {
+    public BaseRVAdapter(Context context, List<T> datas, int... layoutResId) {
         this.mDatas = datas == null ? new ArrayList<T>() : new ArrayList<>(datas);
         this.mContext = context;
         this.mItemLayoutId = layoutResId;
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    /**
+     * 创建ViewHolder时的回调
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
+    @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(mItemLayoutId, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(mItemLayoutId[viewType], parent, false);
         return new ViewHolder(mContext, view);
     }
 
@@ -63,7 +75,7 @@ public abstract class BaseRVAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.itemView.setTag(position);
-        convert(holder, position, getItem(position));
+        convert(holder, position, getItemViewType(position),getItem(position));
         if (onItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,7 +97,7 @@ public abstract class BaseRVAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
         return mDatas.size();
     }
 
-    protected abstract void convert(ViewHolder holder, int position, T item);
+    protected abstract void convert(ViewHolder holder, int position, int type, T item);
 
     private AdapterView.OnItemClickListener onItemClickListener;
 

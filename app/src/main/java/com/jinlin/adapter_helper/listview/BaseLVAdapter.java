@@ -35,13 +35,13 @@ import java.util.List;
 public abstract class BaseLVAdapter<T> extends BaseAdapter {
     protected final Context mContext;
     protected final List<T> mDatas;
-    protected final int mItemLayoutId;
+    protected final int[] mItemLayoutId;
 
-    public BaseLVAdapter(Context context, int itemLayoutId) {
+    public BaseLVAdapter(Context context, int... itemLayoutId) {
         this(context, null, itemLayoutId);
     }
 
-    public BaseLVAdapter(Context context, List<T> datas, int itemLayoutId) {
+    public BaseLVAdapter(Context context, List<T> datas, int... itemLayoutId) {
         this.mContext = context;
         this.mDatas = datas == null ? new ArrayList<T>() : new ArrayList<>(datas);
         this.mItemLayoutId = itemLayoutId;
@@ -64,16 +64,26 @@ public abstract class BaseLVAdapter<T> extends BaseAdapter {
     }
 
     @Override
+    public int getViewTypeCount() {
+        return mItemLayoutId.length;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder = getViewHolder(position, convertView, parent);
-        convert(viewHolder, position, getItem(position));
+        convert(viewHolder, position, getItemViewType(position), getItem(position));
         return viewHolder.getConvertView();
     }
 
-    protected abstract void convert(ViewHolder holder, int position, T item);
+    protected abstract void convert(ViewHolder holder, int position, int type, T item);
 
     private ViewHolder getViewHolder(int position, View convertView, ViewGroup parent) {
-        return ViewHolder.get(mContext, convertView, parent, mItemLayoutId);
+        return ViewHolder.get(mContext, convertView, parent, mItemLayoutId[getItemViewType(position)], position);
     }
 
     @Override

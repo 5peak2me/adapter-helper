@@ -47,6 +47,11 @@ public class ListViewActivity extends AppCompatActivity {
     @Bind(R.id.listView)
     ListView mListView;
     private List<Item> mDatas;
+    private int[] mLayoutIds = {
+            R.layout.list_item_view,
+            R.layout.list_item_view_type1,
+            R.layout.list_item_view_type2
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +74,26 @@ public class ListViewActivity extends AppCompatActivity {
             mDatas.add(new Item(imageThumbUrl, "Title", "subtitle", "23.59"));
         }
 
-        mListView.setAdapter(new BaseLVAdapter<Item>(this, mDatas, R.layout.list_item_view) {
+        mListView.setAdapter(new BaseLVAdapter<Item>(this, mDatas, mLayoutIds) {
             @Override
-            public void convert(ViewHolder holder, final int position, Item item) {
-                holder.setImageByUrl(R.id.iv, item.getUrl());
+            public int getItemViewType(int position) {
+                return position % mLayoutIds.length;
+            }
+
+            @Override
+            public void convert(ViewHolder holder, final int position, int type, Item item) {
+                holder.setText(R.id.tv_subtitle, String.valueOf(type));
+                switch (type) {
+                    case 0:
+                    case 1:
+                        holder.setImageByUrl(R.id.iv, item.getUrl());
+                        break;
+                    case 2:
+                        holder.setCircleImageByUrl(R.id.iv, item.getUrl());
+                        break;
+                }
                 holder.setText(R.id.tv_title, item.getTitle());
-                holder.setText(R.id.tv_subtitle, item.getSubTitle());
+//                holder.setText(R.id.tv_subtitle, item.getSubTitle());
                 holder.setText(R.id.tv_time, item.getTime());
                 holder.setOnClickListener(R.id.iv, new View.OnClickListener() {
                     @Override
@@ -83,6 +102,7 @@ public class ListViewActivity extends AppCompatActivity {
                     }
                 });
             }
+
         });
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
