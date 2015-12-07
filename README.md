@@ -1,7 +1,7 @@
 # adapter-helper
 a common adapter for AdapterView&amp;RecylerView just like base-adapter-helper(https://github.com/JoanZapata/base-adapter-helper)
 
-![](https://github.com/5peak2me/adapter-helper/blob/master/gif/demo.gif)![](https://github.com/5peak2me/adapter-helper/blob/master/gif/demo1.gif)
+![](https://github.com/5peak2me/adapter-helper/blob/master/gif/demo.gif)![](https://github.com/5peak2me/adapter-helper/blob/master/gif/demo2.gif)
 
 also U can custom your own action in ViewHolder.java like this 
 
