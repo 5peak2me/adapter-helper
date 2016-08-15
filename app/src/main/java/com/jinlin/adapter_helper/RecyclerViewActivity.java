@@ -8,9 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.jinlin.adapter_helper.base.ViewHolder;
 import com.jinlin.adapter_helper.model.Item;
-import com.jinlin.adapter_helper.recylerview.BaseRVAdapter;
-import com.jinlin.adapter_helper.recylerview.ViewHolder;
+import com.jinlin.adapter_helper.base.BaseRVAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +47,12 @@ public class RecyclerViewActivity extends AppCompatActivity {
     @Bind(R.id.recylerView)
     RecyclerView mRecylerView;
     private List<Item> mDatas;
-    private int[] mLayoutIds = {
-            R.layout.list_item_view,
-            R.layout.list_item_view_type1,
-            R.layout.list_item_view_type2
-    };
+    private int mLayoutIds = R.layout.list_item_view;
+//    private int[] mLayoutIds = {
+//            R.layout.list_item_view,
+//            R.layout.list_item_view_type1,
+//            R.layout.list_item_view_type2
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +77,9 @@ public class RecyclerViewActivity extends AppCompatActivity {
         mRecylerView.setAdapter(new BaseRVAdapter<Item>(this, mDatas, mLayoutIds) {
 
             @Override
-            public int getItemViewType(int position) {
-                return position % mLayoutIds.length;
-            }
-
-            @Override
-            public void convert(ViewHolder holder, final int position, int type, Item item) {
-                holder.setText(R.id.tv_subtitle, String.valueOf(type));
-                switch (type) {
+            public void convert(ViewHolder holder, final int position, Item item) {
+                holder.setText(R.id.tv_subtitle, String.valueOf(getItemViewType(position)));
+                switch (position % 3) {
                     case 0:
                     case 1:
                         holder.setImageByUrl(R.id.iv, item.getUrl());

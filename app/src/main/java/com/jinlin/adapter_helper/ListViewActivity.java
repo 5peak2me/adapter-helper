@@ -8,8 +8,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.jinlin.adapter_helper.listview.BaseLVAdapter;
-import com.jinlin.adapter_helper.listview.ViewHolder;
+import com.jinlin.adapter_helper.base.BaseLVAdapter;
+import com.jinlin.adapter_helper.base.ViewHolder;
 import com.jinlin.adapter_helper.model.Item;
 
 import java.util.ArrayList;
@@ -47,11 +47,12 @@ public class ListViewActivity extends AppCompatActivity {
     @Bind(R.id.listView)
     ListView mListView;
     private List<Item> mDatas;
-    private int[] mLayoutIds = {
-            R.layout.list_item_view,
-            R.layout.list_item_view_type1,
-            R.layout.list_item_view_type2
-    };
+    private int mLayoutIds = R.layout.list_item_view;
+//    private int[] mLayoutIds = {
+//            R.layout.list_item_view,
+//            R.layout.list_item_view_type1,
+//            R.layout.list_item_view_type2
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +75,12 @@ public class ListViewActivity extends AppCompatActivity {
             mDatas.add(new Item(imageThumbUrl, "Title", "subtitle", "23.59"));
         }
 
-        mListView.setAdapter(new BaseLVAdapter<Item>(this, mDatas, mLayoutIds) {
-            @Override
-            public int getItemViewType(int position) {
-                return position % mLayoutIds.length;
-            }
+        mListView.setAdapter(new BaseLVAdapter<Item>(this, mDatas, R.layout.list_item_view) {
 
             @Override
-            public void convert(ViewHolder holder, final int position, int type, Item item) {
-                holder.setText(R.id.tv_subtitle, String.valueOf(type));
-                switch (type) {
+            public void convert(ViewHolder holder, final int position, Item item) {
+                holder.setText(R.id.tv_subtitle, String.valueOf(getItemViewType(position)));
+                switch (position % 3) {
                     case 0:
                     case 1:
                         holder.setImageByUrl(R.id.iv, item.getUrl());
