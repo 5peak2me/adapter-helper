@@ -1,6 +1,7 @@
 package com.jinlin.adapter_helper.base;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import com.jinlin.adapter_helper.base.interfaces.Adapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,14 +38,14 @@ import java.util.List;
  */
 public abstract class BaseRVAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Adapter<T> {
     protected final Context mContext;
-    protected final List<T> mDatas;
-    protected final int mItemLayoutId;
+    private final List<T> mDatas;
+    private final int mItemLayoutId;
 
     public BaseRVAdapter(Context context, int itemLayoutId) {
         this(context, null, itemLayoutId);
     }
 
-    public BaseRVAdapter(Context context, List<T> datas, int layoutResId) {
+    protected BaseRVAdapter(Context context, List<T> datas, int layoutResId) {
         this.mDatas = datas == null ? new ArrayList<T>() : new ArrayList<>(datas);
         this.mContext = context;
         this.mItemLayoutId = layoutResId;
@@ -74,7 +76,7 @@ public abstract class BaseRVAdapter<T> extends RecyclerView.Adapter<RecyclerView
         convert(helper, position, getItem(position));
     }
 
-    public T getItem(int position) {
+    private T getItem(int position) {
         if (position >= mDatas.size()) return null;
         return mDatas.get(position);
     }
@@ -97,18 +99,18 @@ public abstract class BaseRVAdapter<T> extends RecyclerView.Adapter<RecyclerView
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
-    public interface OnItemClickListener {
+    interface OnItemClickListener {
         void onItemClick(RecyclerView.ViewHolder viewHolder, View view, int position);
     }
 
-    public interface OnItemLongClickListener {
+    interface OnItemLongClickListener {
         void onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position);
     }
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder {
+    private class RecyclerViewHolder extends RecyclerView.ViewHolder {
         ViewHolder adapterHelper;
 
-        public RecyclerViewHolder(View itemView, ViewHolder adapterHelper) {
+        RecyclerViewHolder(View itemView, final ViewHolder adapterHelper) {
             super(itemView);
             this.adapterHelper = adapterHelper;
 
@@ -140,49 +142,54 @@ public abstract class BaseRVAdapter<T> extends RecyclerView.Adapter<RecyclerView
     }
 
     @Override
-    public void add(T elem) {
+    public void add(@NonNull T elem) {
         mDatas.add(elem);
         notifyDataSetChanged();
     }
 
     @Override
-    public void addAll(List<T> elem) {
-        mDatas.addAll(elem);
-        notifyDataSetChanged();
+    public void add(int index, @NonNull T elem) {
+        mDatas.add(index, elem);
+        notifyItemInserted(index);
     }
 
     @Override
-    public void set(T oldElem, T newElem) {
+    public void addAll(@NonNull List<T> elem) {
+        mDatas.addAll(elem);
+        notifyItemRangeInserted(mDatas.size(), elem.size());
+    }
+
+    @Override
+    public void set(@NonNull T oldElem, @NonNull T newElem) {
         set(mDatas.indexOf(oldElem), newElem);
     }
 
     @Override
-    public void set(int index, T elem) {
+    public void set(int index, @NonNull T elem) {
         mDatas.set(index, elem);
         notifyDataSetChanged();
     }
 
     @Override
-    public void remove(T elem) {
-        mDatas.remove(elem);
-        notifyDataSetChanged();
+    public void remove(@NonNull T elem) {
+        remove(mDatas.indexOf(elem));
     }
 
     @Override
     public void remove(int index) {
         mDatas.remove(index);
-        notifyDataSetChanged();
+        notifyItemRemoved(index);
     }
 
     @Override
-    public void replaceAll(List<T> elem) {
+    public void replaceAll(@NonNull List<T> elem) {
         mDatas.clear();
         mDatas.addAll(elem);
         notifyDataSetChanged();
     }
 
     @Override
-    public boolean contains(T elem) {
+    public boolean contains(@NonNull T elem) {
         return mDatas.contains(elem);
     }
 
@@ -193,6 +200,12 @@ public abstract class BaseRVAdapter<T> extends RecyclerView.Adapter<RecyclerView
     public void clear() {
         mDatas.clear();
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void move(int fromPosition, int toPosition) {
+        Collections.swap(mDatas, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
     }
 
 }

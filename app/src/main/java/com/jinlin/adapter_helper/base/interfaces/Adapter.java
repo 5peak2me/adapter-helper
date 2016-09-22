@@ -1,5 +1,7 @@
 package com.jinlin.adapter_helper.base.interfaces;
 
+import android.support.annotation.NonNull;
+
 import com.jinlin.adapter_helper.base.ViewHolder;
 
 import java.util.List;
@@ -7,7 +9,6 @@ import java.util.List;
 /**
  * Created by J!nl!n on 15/10/19.
  * Copyright © 1990-2015 J!nl!n™ Inc. All rights reserved.
- * <p/>
  * ━━━━━━神兽出没━━━━━━
  * 　　　┏┓　　　┏┓
  * 　　┏┛┻━━━┛┻┓
@@ -55,14 +56,22 @@ public interface Adapter<T> {
      *
      * @param elem The item that needs to be added.
      */
-    void add(T elem);
+    void add(@NonNull T elem);
+
+    /**
+     * Implement this method to add a item by index.
+     *
+     * @param index the index we need remove.
+     * @param elem  new item.
+     */
+    void add(int index, @NonNull T elem);
 
     /**
      * Implement this method to add a new list into the original list.
      *
      * @param elem new list.
      */
-    void addAll(List<T> elem);
+    void addAll(@NonNull List<T> elem);
 
     /**
      * Implement this method to replace a item with another item.
@@ -70,7 +79,7 @@ public interface Adapter<T> {
      * @param oldElem old item.
      * @param newElem new item.
      */
-    void set(T oldElem, T newElem);
+    void set(@NonNull T oldElem, @NonNull T newElem);
 
     /**
      * Implement this method to replace a item by index.
@@ -78,14 +87,14 @@ public interface Adapter<T> {
      * @param index the index we need remove.
      * @param elem  new item.
      */
-    void set(int index, T elem);
+    void set(int index, @NonNull T elem);
 
     /**
      * Implement this method to remove a item.
      *
      * @param elem the item we need remove.
      */
-    void remove(T elem);
+    void remove(@NonNull T elem);
 
     /**
      * Implement this method to remove a item by index.
@@ -99,7 +108,7 @@ public interface Adapter<T> {
      *
      * @param elem other list.
      */
-    void replaceAll(List<T> elem);
+    void replaceAll(@NonNull List<T> elem);
 
     /**
      * Implement this method to judge the list has contains the item.
@@ -107,11 +116,19 @@ public interface Adapter<T> {
      * @param elem The item that needs to be judged.
      * @return the result of contains judge.
      */
-    boolean contains(T elem);
+    boolean contains(@NonNull T elem);
 
     /**
      * Implement this method to clear list.
      */
     void clear();
+
+    /**
+     * Implement this method to move list item.
+     *
+     * @param fromPosition
+     * @param toPosition
+     */
+    void move(int fromPosition, int toPosition);
 
 }

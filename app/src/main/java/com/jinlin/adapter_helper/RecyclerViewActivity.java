@@ -48,11 +48,12 @@ public class RecyclerViewActivity extends AppCompatActivity {
     RecyclerView mRecylerView;
     private List<Item> mDatas;
     private int mLayoutIds = R.layout.list_item_view;
-//    private int[] mLayoutIds = {
+    //    private int[] mLayoutIds = {
 //            R.layout.list_item_view,
 //            R.layout.list_item_view_type1,
 //            R.layout.list_item_view_type2
 //    };
+    private BaseRVAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,8 @@ public class RecyclerViewActivity extends AppCompatActivity {
         for (String imageThumbUrl : Images.imageThumbUrls) {
             mDatas.add(new Item(imageThumbUrl, "Title", "subtitle", "23.59"));
         }
-
-        mRecylerView.setAdapter(new BaseRVAdapter<Item>(this, mDatas, mLayoutIds) {
+        mRecylerView.addItemDecoration(new Divider(this));
+        mRecylerView.setAdapter(mAdapter = new BaseRVAdapter<Item>(this, mDatas, mLayoutIds) {
 
             @Override
             public void convert(ViewHolder holder, final int position, Item item) {
@@ -99,7 +100,6 @@ public class RecyclerViewActivity extends AppCompatActivity {
                 });
             }
         });
-
         mRecylerView.setLayoutManager(new LinearLayoutManager(this));
 
     }

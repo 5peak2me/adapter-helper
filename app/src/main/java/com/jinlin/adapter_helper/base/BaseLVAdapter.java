@@ -1,6 +1,7 @@
 package com.jinlin.adapter_helper.base;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import com.jinlin.adapter_helper.base.interfaces.Adapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,14 +38,14 @@ import java.util.List;
  */
 public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T> {
     protected final Context mContext;
-    protected final List<T> mDatas;
-    protected final int mItemLayoutId;
+    private final List<T> mDatas;
+    private final int mItemLayoutId;
 
     public BaseLVAdapter(Context context, int itemLayoutId) {
         this(context, null, itemLayoutId);
     }
 
-    public BaseLVAdapter(Context context, List<T> datas, int itemLayoutId) {
+    protected BaseLVAdapter(Context context, List<T> datas, int itemLayoutId) {
         this.mContext = context;
         this.mDatas = datas == null ? new ArrayList<T>() : new ArrayList<>(datas);
         this.mItemLayoutId = itemLayoutId;
@@ -96,30 +98,36 @@ public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T>
     }
 
     @Override
-    public void add(T elem) {
+    public void add(@NonNull T elem) {
         mDatas.add(elem);
         notifyDataSetChanged();
     }
 
     @Override
-    public void addAll(List<T> elem) {
+    public void add(int index, @NonNull T elem) {
+        mDatas.add(index, elem);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void addAll(@NonNull List<T> elem) {
         mDatas.addAll(elem);
         notifyDataSetChanged();
     }
 
     @Override
-    public void set(T oldElem, T newElem) {
+    public void set(@NonNull T oldElem, @NonNull T newElem) {
         set(mDatas.indexOf(oldElem), newElem);
     }
 
     @Override
-    public void set(int index, T elem) {
+    public void set(int index, @NonNull T elem) {
         mDatas.set(index, elem);
         notifyDataSetChanged();
     }
 
     @Override
-    public void remove(T elem) {
+    public void remove(@NonNull T elem) {
         mDatas.remove(elem);
         notifyDataSetChanged();
     }
@@ -131,14 +139,14 @@ public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T>
     }
 
     @Override
-    public void replaceAll(List<T> elem) {
+    public void replaceAll(@NonNull List<T> elem) {
         mDatas.clear();
         mDatas.addAll(elem);
         notifyDataSetChanged();
     }
 
     @Override
-    public boolean contains(T elem) {
+    public boolean contains(@NonNull T elem) {
         return mDatas.contains(elem);
     }
 
@@ -151,4 +159,9 @@ public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T>
         notifyDataSetChanged();
     }
 
+    @Override
+    public void move(int fromPosition, int toPosition) {
+        Collections.swap(mDatas, fromPosition, toPosition);
+        notifyDataSetChanged();
+    }
 }
