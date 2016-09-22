@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jinlin.adapter_helper.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -158,7 +159,7 @@ public class ViewHolder {
      */
     public ViewHolder setImageByUrl(int viewId, String url) {
         ImageView iv = getView(viewId);
-        Picasso.with(mContext).load(url).into(iv);
+        Glide.with(mContext).load(url).into(iv);
         return this;
     }
 

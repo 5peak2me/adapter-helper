@@ -126,8 +126,8 @@ public interface Adapter<T> {
     /**
      * Implement this method to move list item.
      *
-     * @param fromPosition
-     * @param toPosition
+     * @param fromPosition start positiom
+     * @param toPosition   end positiom
      */
     void move(int fromPosition, int toPosition);
 
