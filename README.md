@@ -55,8 +55,16 @@ and from now on, it support multiple types of layout.U can easily find it in cod
 ```
 mListView.setAdapter(new BaseLVAdapter<Item>(this, mDatas, mLayoutIds) {
     @Override
-    public int getItemViewType(int position) {
-        return position % mLayoutIds.length;
+    public int getLayoutResId(Item item, int position) {
+        switch (position % 3) {
+            case 1:
+                return R.layout.list_item_view_type1;
+            case 2:
+                return R.layout.list_item_view_type2;
+            case 0:
+            default:
+                return super.getLayoutResId(item, position);
+        }
     }
 
     @Override
