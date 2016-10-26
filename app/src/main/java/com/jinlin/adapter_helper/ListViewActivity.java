@@ -89,9 +89,8 @@ public class ListViewActivity extends AppCompatActivity {
                         holder.setCircleImageByUrl(R.id.iv, item.getUrl());
                         break;
                 }
-                holder.setText(R.id.tv_title, item.getTitle());
-//                holder.setText(R.id.tv_subtitle, item.getSubTitle());
-                holder.setText(R.id.tv_time, item.getTime());
+                holder.setText(R.id.tv_title, item.getTitle()+position);
+                holder.setText(R.id.tv_subtitle, item.getSubTitle());
                 holder.setOnClickListener(R.id.iv, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -111,6 +110,11 @@ public class ListViewActivity extends AppCompatActivity {
                     default:
                         return super.getLayoutResId(item, position);
                 }
+            }
+
+            @Override
+            public int getViewTypeCount() {
+                return 3;
             }
         });
 

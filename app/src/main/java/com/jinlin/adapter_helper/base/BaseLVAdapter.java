@@ -69,22 +69,23 @@ public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T>
 
     @Override
     public int getItemViewType(int position) {
-        return getLayoutResId(getItem(position), position);
+        return position % getViewTypeCount();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final T item = getItem(position);
         final ViewHolder viewHolder = getViewHolder(position, convertView, parent);
-        convert(viewHolder, position, item);
         viewHolder.setAssociatedObject(item);
+
+        convert(viewHolder, position, item);
         return viewHolder.getConvertView();
     }
 
 //    protected abstract void convert(ViewHolder holder, int position, T item);
 
     private ViewHolder getViewHolder(int position, View convertView, ViewGroup parent) {
-        return ViewHolder.get(mContext, convertView, parent, getItemViewType(position), position);
+        return ViewHolder.get(mContext, convertView, parent, getLayoutResId(getItem(position), position), position);
     }
 
     @Override

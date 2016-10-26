@@ -8,10 +8,13 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,14 +56,18 @@ import com.squareup.picasso.Picasso;
  * ━━━━━━感觉萌萌哒━━━━━━
  */
 public class ViewHolder {
+    /* Views indexed with their IDs */
     private final SparseArrayCompat<View> mViews;
-    private final View view;
+
+    private final View mView;
+
     private final Context mContext;
+
     private int mPosition;
-    private int mLayoutId;
-    /**
-     * Package private field to retain the associated user object and detect a change
-     */
+
+    protected int mLayoutId;
+
+    /* Package private field to retain the associated user object and detect a change */
     Object mAssociatedObject;
 
     private ViewHolder(Context context, ViewGroup parent, int layoutId, int position) {
@@ -68,9 +75,9 @@ public class ViewHolder {
         this.mPosition = position;
         this.mLayoutId = layoutId;
         this.mViews = new SparseArrayCompat<>();
-        view = LayoutInflater.from(context).inflate(layoutId, parent, false);
+        mView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         // setTag
-        view.setTag(this);
+        mView.setTag(this);
     }
 
     /**
@@ -84,13 +91,13 @@ public class ViewHolder {
     protected <T extends View> T getView(int viewId) {
         View childView = mViews.get(viewId);
         if (childView == null) {
-            childView = view.findViewById(viewId);
+            childView = mView.findViewById(viewId);
             mViews.put(viewId, childView);
         }
         return (T) childView;
     }
 
-    public static ViewHolder get(Context context, View convertView, ViewGroup parent, int layoutId) {
+    static ViewHolder get(Context context, View convertView, ViewGroup parent, int layoutId) {
         return get(context, convertView, parent, layoutId, -1);
     }
 
@@ -104,32 +111,33 @@ public class ViewHolder {
      * @param position    当前位置
      * @return
      */
-    public static ViewHolder get(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
+    static ViewHolder get(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
         if (convertView == null) {
+            Log.d("ViewHolder", "我是空的，新创建:" + position);
             return new ViewHolder(context, parent, layoutId, position);
+        } else {
+            // Retrieve the existing helper and update its position
+            ViewHolder existingHelper = (ViewHolder) convertView.getTag();
+            existingHelper.mPosition = position;
+            if (existingHelper.mLayoutId != layoutId) {
+                Log.d("ViewHolder", "position:" + position);
+                return new ViewHolder(context, parent, layoutId, position);
+            }
+
+            return existingHelper;
         }
-
-        // Retrieve the existing helper and update its position
-        ViewHolder existingHelper = (ViewHolder) convertView.getTag();
-
-        if (existingHelper.mLayoutId != layoutId) {
-            return new ViewHolder(context, parent, layoutId, position);
-        }
-
-        existingHelper.mPosition = position;
-        return existingHelper;
     }
 
     public View getConvertView() {
-        return view;
+        return mView;
     }
 
     /**
      * 为TextView设置字符串
      *
-     * @param viewId
-     * @param text
-     * @return
+     * @param viewId The view id.
+     * @param text   The text to put in the text view.
+     * @return The ViewHolder for chaining.
      */
     public ViewHolder setText(int viewId, String text) {
         TextView view = getView(viewId);
@@ -140,22 +148,22 @@ public class ViewHolder {
     /**
      * 为ImageView设置图片
      *
-     * @param viewId
-     * @param drawableId
-     * @return
+     * @param viewId     The view id.
+     * @param imageResId he image resource id.
+     * @return The ViewHolder for chaining.
      */
-    public ViewHolder setImageResource(int viewId, int drawableId) {
+    public ViewHolder setImageResource(int viewId, int imageResId) {
         ImageView view = getView(viewId);
-        view.setImageResource(drawableId);
+        view.setImageResource(imageResId);
         return this;
     }
 
     /**
      * 为ImageView设置图片
      *
-     * @param viewId
+     * @param viewId The view id.
      * @param url
-     * @return
+     * @return The ViewHolder for chaining.
      */
     public ViewHolder setImageByUrl(int viewId, String url) {
         ImageView iv = getView(viewId);
@@ -166,9 +174,9 @@ public class ViewHolder {
     /**
      * 为ImageView设置图片
      *
-     * @param viewId
+     * @param viewId The view id.
      * @param url
-     * @return
+     * @return The ViewHolder for chaining.
      */
     public ViewHolder setCircleImageByUrl(int viewId, String url) {
         ImageView iv = getView(viewId);
@@ -179,9 +187,9 @@ public class ViewHolder {
     /**
      * 为View设置监听
      *
-     * @param viewId
+     * @param viewId   The view id.
      * @param listener
-     * @return
+     * @return The ViewHolder for chaining.
      */
     public ViewHolder setOnClickListener(int viewId, View.OnClickListener listener) {
         View v = getView(viewId);
@@ -198,6 +206,7 @@ public class ViewHolder {
 
     /**
      * Set a view visibility to VISIBLE (true) or GONE (false).
+     *
      * @param viewId  The view id.
      * @param visible True for VISIBLE, false for GONE.
      * @return The ViewHolder for chaining.
@@ -210,6 +219,7 @@ public class ViewHolder {
 
     /**
      * Will set background color of a view.
+     *
      * @param viewId The view id.
      * @param color  A color, not a resource id.
      * @return The ViewHolder for chaining.
@@ -222,6 +232,7 @@ public class ViewHolder {
 
     /**
      * Will set background of a view.
+     *
      * @param viewId        The view id.
      * @param backgroundRes A resource to use as a background.
      * @return The ViewHolder for chaining.
@@ -234,6 +245,7 @@ public class ViewHolder {
 
     /**
      * Will set text color of a TextView.
+     *
      * @param viewId    The view id.
      * @param textColor The text color (not a resource id).
      * @return The ViewHolder for chaining.
@@ -246,22 +258,24 @@ public class ViewHolder {
 
     /**
      * Will set text color of a TextView.
+     *
      * @param viewId       The view id.
      * @param textColorRes The text color resource id.
      * @return The ViewHolder for chaining.
      */
     public ViewHolder setTextColorRes(int viewId, int textColorRes) {
         TextView view = getView(viewId);
-        view.setTextColor(mContext.getResources().getColor(textColorRes));
+        view.setTextColor(ContextCompat.getColor(mContext, textColorRes));
         return this;
     }
 
     /**
      * Will set text color of a TextView.
+     *
      * @param viewId       The view id.
      * @param textColorRes The text color resource id.
-     * @param theme theme The theme used to style the color attributes, may be
-     *              {@code null}.
+     * @param theme        theme The theme used to style the color attributes, may be
+     *                     {@code null}.
      * @return The ViewHolder for chaining.
      */
     @TargetApi(Build.VERSION_CODES.M)
@@ -273,24 +287,23 @@ public class ViewHolder {
 
     /**
      * Will set the image of an ImageView from a drawable.
+     *
      * @param viewId   The view id.
      * @param drawable The image drawable.
      * @return The ViewHolder for chaining.
      */
-    public ViewHolder setImageDrawable(int viewId, Drawable drawable) {
-        if(null != drawable){
-            ImageView view = getView(viewId);
-            view.setImageDrawable(drawable);
-        }
+    public ViewHolder setImageDrawable(int viewId, @NonNull Drawable drawable) {
+        ImageView view = getView(viewId);
+        view.setImageDrawable(drawable);
         return this;
     }
 
-    /** Add an action to set the image of an image view. Can be called multiple times. */
-    public ViewHolder setImageBitmap(int viewId, Bitmap bitmap) {
-        if(null != bitmap){
-            ImageView view = getView(viewId);
-            view.setImageBitmap(bitmap);
-        }
+    /**
+     * Add an action to set the image of an image view. Can be called multiple times.
+     */
+    public ViewHolder setImageBitmap(int viewId, @NonNull Bitmap bitmap) {
+        ImageView view = getView(viewId);
+        view.setImageBitmap(bitmap);
         return this;
     }
 
@@ -313,6 +326,7 @@ public class ViewHolder {
 
     /**
      * Add links into a TextView.
+     *
      * @param viewId The id of the TextView to linkify.
      * @return The BaseAdapterHelper for chaining.
      */
@@ -324,10 +338,11 @@ public class ViewHolder {
 
     /**
      * Add links into a TextView.
+     *
      * @param viewId The id of the TextView to linkify.
      * @param mask
-     * @see android.text.util.Linkify#addLinks(TextView text, int mask)
      * @return The ViewHolder for chaining.
+     * @see android.text.util.Linkify#addLinks(TextView text, int mask)
      */
     public ViewHolder addLinks(int viewId, int mask) {
         TextView view = getView(viewId);
@@ -540,11 +555,9 @@ public class ViewHolder {
      * @param adapter The adapter;
      * @return The ViewHolder for chaining.
      */
-    public ViewHolder setAdapter(int viewId, Adapter adapter) {
-        if (null != adapter) {
-            AdapterView view = getView(viewId);
-            view.setAdapter(adapter);
-        }
+    public ViewHolder setAdapter(int viewId, @NonNull Adapter adapter) {
+        AdapterView view = getView(viewId);
+        view.setAdapter(adapter);
         return this;
     }
 
@@ -559,7 +572,7 @@ public class ViewHolder {
     /**
      * Should be called during convert
      */
-    public void setAssociatedObject(Object associatedObject) {
+    void setAssociatedObject(Object associatedObject) {
         this.mAssociatedObject = associatedObject;
     }
 
