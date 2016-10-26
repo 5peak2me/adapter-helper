@@ -2,6 +2,7 @@ package com.jinlin.adapter_helper.base;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -40,6 +41,7 @@ public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T>
     protected final Context mContext;
     private final List<T> mDatas;
     private final int mItemLayoutId;
+    private SparseIntArray mTypeMap = new SparseIntArray();
 
     public BaseLVAdapter(Context context, int itemLayoutId) {
         this(context, null, itemLayoutId);
@@ -69,7 +71,13 @@ public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T>
 
     @Override
     public int getItemViewType(int position) {
-        return position % getViewTypeCount();
+        int layoutResId = getLayoutResId(getItem(position), position);
+        int type = mTypeMap.get(layoutResId, -1);
+        if (type == -1) {
+            type = mTypeMap.size();
+            mTypeMap.put(layoutResId, type);
+        }
+        return type;
     }
 
     @Override
