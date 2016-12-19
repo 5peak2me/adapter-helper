@@ -86,7 +86,7 @@ public abstract class BaseRVAdapter<T> extends RecyclerView.Adapter<RecyclerView
         return mDatas.size();
     }
 
-//    protected abstract void convert(ViewHolder holder, int position, T item);
+    protected abstract void convert(ViewHolder holder, int position, T item);
 
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;

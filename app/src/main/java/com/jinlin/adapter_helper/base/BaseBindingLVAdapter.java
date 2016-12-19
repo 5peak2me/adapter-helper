@@ -1,8 +1,12 @@
 package com.jinlin.adapter_helper.base;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.util.SparseIntArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,9 +17,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 /**
- * Created by J!nl!n on 15/10/19.
- * Copyright © 1990-2015 J!nl!n™ Inc. All rights reserved.
+ * Created by J!nl!n on 2016/12/19.
+ * Copyright © 1990-2016 J!nl!n™ Inc. All rights reserved.
  * <p>
  * ━━━━━━神兽出没━━━━━━
  * 　　　┏┓　　　┏┓
@@ -37,20 +42,23 @@ import java.util.List;
  * 　　　　　┗┻┛　┗┻┛
  * ━━━━━━感觉萌萌哒━━━━━━
  */
-public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T> {
-    protected final Context mContext;
+public class BaseBindingLVAdapter<T> extends BaseAdapter implements Adapter<T> {
+
     private final List<T> mDatas;
     private final int mItemLayoutId;
-    private SparseIntArray mTypeMap = new SparseIntArray();
+    private final SparseIntArray mTypeMap = new SparseIntArray();
+    private final LayoutInflater mInflater;
+    private final int mVariableId;
 
-    public BaseLVAdapter(Context context, int itemLayoutId) {
-        this(context, null, itemLayoutId);
+    public BaseBindingLVAdapter(Context context, int itemLayoutId, int variableId) {
+        this(context, null, itemLayoutId, variableId);
     }
 
-    protected BaseLVAdapter(Context context, List<T> datas, int itemLayoutId) {
-        this.mContext = context;
+    protected BaseBindingLVAdapter(Context context, List<T> datas, int itemLayoutId, int variableId) {
+        this.mInflater = LayoutInflater.from(context);
         this.mDatas = datas == null ? new ArrayList<T>() : new ArrayList<>(datas);
         this.mItemLayoutId = itemLayoutId;
+        this.mVariableId = variableId;
     }
 
     @Override
@@ -82,18 +90,15 @@ public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T>
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final T item = getItem(position);
-        final ViewHolder viewHolder = getViewHolder(position, convertView, parent);
-        viewHolder.setAssociatedObject(item);
-
-        convert(viewHolder, position, item);
-        return viewHolder.getConvertView();
-    }
-
-    protected abstract void convert(ViewHolder holder, int position, T item);
-
-    private ViewHolder getViewHolder(int position, View convertView, ViewGroup parent) {
-        return ViewHolder.get(mContext, convertView, parent, getLayoutResId(getItem(position), position), position);
+        ViewDataBinding dataBinding;
+        if (convertView == null) {
+            Log.d("BaseBindingLVAdapter", "new");
+            dataBinding = DataBindingUtil.inflate(mInflater, getLayoutResId(getItem(position), position), parent, false);
+        } else {
+            dataBinding = DataBindingUtil.getBinding(convertView);
+        }
+        dataBinding.setVariable(mVariableId, mDatas.get(position));
+        return dataBinding.getRoot();
     }
 
     @Override
@@ -173,4 +178,5 @@ public abstract class BaseLVAdapter<T> extends BaseAdapter implements Adapter<T>
         Collections.swap(mDatas, fromPosition, toPosition);
         notifyDataSetChanged();
     }
+
 }

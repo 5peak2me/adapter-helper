@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.btn_lv, R.id.btn_rv})
+    @OnClick({R.id.btn_lv, R.id.btn_rv, R.id.btn_lv_binding, R.id.btn_rv_binding})
     public void forward(View view) {
         switch (view.getId()) {
             case R.id.btn_lv:
@@ -25,6 +25,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_rv:
                 startActivity(new Intent(this, RecyclerViewActivity.class));
+                break;
+            case R.id.btn_lv_binding:
+                startActivity(new Intent(this, ListViewBingdingActivity.class));
+                break;
+            case R.id.btn_rv_binding:
+                startActivity(new Intent(this, RecyclerViewBindingActivity.class));
                 break;
         }
     }

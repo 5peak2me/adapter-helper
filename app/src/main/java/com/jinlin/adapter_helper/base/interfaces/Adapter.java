@@ -2,8 +2,6 @@ package com.jinlin.adapter_helper.base.interfaces;
 
 import android.support.annotation.NonNull;
 
-import com.jinlin.adapter_helper.base.ViewHolder;
-
 import java.util.List;
 
 /**
@@ -39,7 +37,7 @@ public interface Adapter<T> {
      *                 we want.
      * @param item     The item that needs to be displayed.
      */
-    void convert(ViewHolder holder, int position, T item);
+//    void convert(ViewHolder holder, int position, T item);
 
     /**
      * Implement this method and use the helper to set layout res.
