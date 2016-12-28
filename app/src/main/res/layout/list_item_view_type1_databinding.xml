@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.jinlin.adapter_helper.model.Item"/>
+            type="com.jinlin.adapter_helper.model.ItemViewModel"/>
     </data>
 
     <LinearLayout
@@ -54,6 +54,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_margin="5dp"
+            android:src="@{item.url}"
             tools:src="@mipmap/ic_launcher"/>
     </LinearLayout>
 </layout>

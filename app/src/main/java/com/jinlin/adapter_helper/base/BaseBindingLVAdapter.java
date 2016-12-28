@@ -4,7 +4,6 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,7 +91,6 @@ public class BaseBindingLVAdapter<T> extends BaseAdapter implements Adapter<T> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewDataBinding dataBinding;
         if (convertView == null) {
-            Log.d("BaseBindingLVAdapter", "new");
             dataBinding = DataBindingUtil.inflate(mInflater, getLayoutResId(getItem(position), position), parent, false);
         } else {
             dataBinding = DataBindingUtil.getBinding(convertView);

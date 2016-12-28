@@ -80,16 +80,8 @@ public class ListViewActivity extends AppCompatActivity {
             @Override
             public void convert(ViewHolder holder, final int position, Item item) {
                 holder.setText(R.id.tv_subtitle, String.valueOf(getItemViewType(position)));
-                switch (position % 3) {
-                    case 0:
-                    case 1:
-                        holder.setImageByUrl(R.id.iv, item.getUrl());
-                        break;
-                    case 2:
-                        holder.setCircleImageByUrl(R.id.iv, item.getUrl());
-                        break;
-                }
-                holder.setText(R.id.tv_title, item.getTitle()+position);
+                holder.setImageByUrl(R.id.iv, item.getUrl());
+                holder.setText(R.id.tv_title, item.getTitle() + position);
                 holder.setText(R.id.tv_subtitle, item.getSubTitle());
                 holder.setOnClickListener(R.id.iv, new View.OnClickListener() {
                     @Override

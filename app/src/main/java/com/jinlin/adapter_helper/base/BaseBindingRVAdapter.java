@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -74,7 +73,6 @@ public class BaseBindingRVAdapter<T> extends RecyclerView.Adapter<BaseBindingVH>
 
     @Override
     public BaseBindingVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d("BaseBindingRVAdapter", "run");
         return new BaseBindingVH<>(DataBindingUtil.inflate(mInflater, mTypeMap.get(viewType), parent, false));
     }
 

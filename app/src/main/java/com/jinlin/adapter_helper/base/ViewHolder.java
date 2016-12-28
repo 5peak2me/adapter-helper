@@ -28,8 +28,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.jinlin.adapter_helper.CircleTransform;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by J!nl!n on 15/10/19.
@@ -168,19 +166,6 @@ public class ViewHolder {
     public ViewHolder setImageByUrl(int viewId, String url) {
         ImageView iv = getView(viewId);
         Glide.with(mContext).load(url).into(iv);
-        return this;
-    }
-
-    /**
-     * 为ImageView设置图片
-     *
-     * @param viewId The view id.
-     * @param url
-     * @return The ViewHolder for chaining.
-     */
-    public ViewHolder setCircleImageByUrl(int viewId, String url) {
-        ImageView iv = getView(viewId);
-        Picasso.with(mContext).load(url).transform(new CircleTransform()).into(iv);
         return this;
     }
 

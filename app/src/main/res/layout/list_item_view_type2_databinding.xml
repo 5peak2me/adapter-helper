@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.jinlin.adapter_helper.model.Item"/>
+            type="com.jinlin.adapter_helper.model.ItemViewModel"/>
     </data>
 
     <LinearLayout
