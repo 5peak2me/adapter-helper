@@ -5,11 +5,10 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.jinlin.adapter_helper.base.BaseBindingRVAdapter.BaseBindingVH;
+import com.jinlin.adapter_helper.base.BaseBindingRVAdapter.VH;
 import com.jinlin.adapter_helper.base.interfaces.Adapter;
 
 import java.util.ArrayList;
@@ -40,11 +39,10 @@ import java.util.List;
  * 　　　　　┗┻┛　┗┻┛
  * ━━━━━━感觉萌萌哒━━━━━━
  */
-public class BaseBindingRVAdapter<T> extends RecyclerView.Adapter<BaseBindingVH> implements Adapter<T> {
+public class BaseBindingRVAdapter<T> extends RecyclerView.Adapter<VH> implements Adapter<T> {
 
     private final List<T> mDatas;
     private final int mItemLayoutId;
-    private final SparseIntArray mTypeMap = new SparseIntArray();
     private final LayoutInflater mInflater;
     private final int mVariableId;
 
@@ -61,9 +59,7 @@ public class BaseBindingRVAdapter<T> extends RecyclerView.Adapter<BaseBindingVH>
 
     @Override
     public int getItemViewType(int position) {
-        int resId = getLayoutResId(getItem(position), position);
-        mTypeMap.put(resId, resId);
-        return resId;
+        return getLayoutResId(getItem(position), position);
     }
 
     private T getItem(int position) {
@@ -72,12 +68,12 @@ public class BaseBindingRVAdapter<T> extends RecyclerView.Adapter<BaseBindingVH>
     }
 
     @Override
-    public BaseBindingVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new BaseBindingVH<>(DataBindingUtil.inflate(mInflater, mTypeMap.get(viewType), parent, false));
+    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new VH<>(DataBindingUtil.inflate(mInflater, viewType, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(BaseBindingVH holder, int position) {
+    public void onBindViewHolder(VH holder, int position) {
         holder.getBinding().setVariable(mVariableId, mDatas.get(position));
         holder.getBinding().executePendingBindings();
     }
@@ -160,11 +156,11 @@ public class BaseBindingRVAdapter<T> extends RecyclerView.Adapter<BaseBindingVH>
         notifyDataSetChanged();
     }
 
-    class BaseBindingVH<D extends ViewDataBinding> extends RecyclerView.ViewHolder {
+    static class VH<D extends ViewDataBinding> extends RecyclerView.ViewHolder {
 
         private final D mBinding;
 
-        BaseBindingVH(D d) {
+        VH(D d) {
             super(d.getRoot());
             mBinding = d;
         }
